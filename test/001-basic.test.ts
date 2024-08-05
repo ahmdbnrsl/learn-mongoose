@@ -35,10 +35,10 @@ describe('BASIC', () => {
             });
             const Person = mongoose.model('Person', PersonSchema);
             const person = new Person({
-                name: 'Ahmad Beni Rusli',
+                name: 'Supri',
                 age: '19'
             });
-            await person.save().then((person: any) => console.info(person));
+            await person.save().then((person: Persons) => console.info(person));
         } catch (error) {
             console.error('Error');
         } finally {
