@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { UpdateResult } from 'mongodb';
 import 'dotenv/config';
 
 const URI: string = process.env.MONGO_URI || '';
@@ -19,11 +20,15 @@ const PersonSchema: Schema<Persons> = new Schema({
 });
 const Person = mongoose.model('Person', PersonSchema);
 
-describe('Get Data', () => {
-    it('should get all data', async () => {
+describe('Update Data', () => {
+    it('should update one data', async () => {
         try {
             await mongoose.connect(URI);
-            const persons: Array<Persons> = await Person.find();
+            const persons: Array<Persons> | null =
+                await Person.findOneAndUpdate(
+                    { name: 'Supri' },
+                    { name: 'Via Fitriana' }
+                );
             console.info(persons);
         } catch (error) {
             console.error(error);
@@ -32,25 +37,12 @@ describe('Get Data', () => {
         }
     });
 
-    it('should find one data', async () => {
+    it('should update many data', async () => {
         try {
             await mongoose.connect(URI);
-            const persons: Persons | null = await Person.findOne({
-                name: 'Supri'
-            });
-            console.info(persons);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            await mongoose.connection.close();
-        }
-    });
-
-    it('should find by id', async () => {
-        try {
-            await mongoose.connect(URI);
-            const persons: Persons | null = await Person.findById(
-                '66b080cc81a22ef427f47cc1'
+            const persons: UpdateResult<Document> = await Person.updateMany(
+                { age: '19' },
+                { age: '20' }
             );
             console.info(persons);
         } catch (error) {
@@ -60,12 +52,13 @@ describe('Get Data', () => {
         }
     });
 
-    it('should get many data', async () => {
+    it('should update all data', async () => {
         try {
             await mongoose.connect(URI);
-            const persons: Array<Persons> = await Person.find({
-                name: 'Supri'
-            });
+            const persons: UpdateResult<Document> = await Person.updateMany(
+                {},
+                { age: '19' }
+            );
             console.info(persons);
         } catch (error) {
             console.error(error);
